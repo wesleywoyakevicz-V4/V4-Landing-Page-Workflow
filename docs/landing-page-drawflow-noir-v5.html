@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Landing Page Ops Noir V5</title>
+  <style>
+    :root{
+      --bg:#070708;
+      --bg-soft:#120f13;
+      --panel:rgba(255,255,255,.055);
+      --panel-strong:rgba(255,255,255,.085);
+      --line:rgba(255,255,255,.10);
+      --text:#f4eee8;
+      --muted:#b8ada4;
+      --mint:#74d3c3;
+      --gold:#d2aa68;
+      --ember:#cf6347;
+      --plum:#6e5061;
+      --moss:#7f936f;
+      --shadow:0 28px 90px rgba(0,0,0,.46);
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      color:var(--text);
+      font-family:"Trebuchet MS","Gill Sans",sans-serif;
+      background:
+        radial-gradient(circle at 14% 12%,rgba(116,211,195,.08),transparent 22%),
+        radial-gradient(circle at 84% 18%,rgba(210,170,104,.11),transparent 22%),
+        radial-gradient(circle at 50% 82%,rgba(207,99,71,.08),transparent 26%),
+        linear-gradient(180deg,var(--bg) 0%,var(--bg-soft) 60%,#09080b 100%);
+      overflow-x:hidden;
+    }
+    body::before,
+    body::after{
+      content:"";
+      position:fixed;
+      pointer-events:none;
+      z-index:0;
+      filter:blur(88px);
+      opacity:.38;
+    }
+    body::before{
+      width:320px;
+      height:320px;
+      left:-110px;
+      top:16vh;
+      background:rgba(116,211,195,.16);
+    }
+    body::after{
+      width:380px;
+      height:380px;
+      right:-130px;
+      top:46vh;
+      background:rgba(210,170,104,.14);
+    }
+    .page{
+      position:relative;
+      z-index:1;
+      max-width:1480px;
+      margin:0 auto;
+      padding:18px 18px 68px;
+    }
+    .glass{
+      background:linear-gradient(180deg,var(--panel-strong),var(--panel));
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(26px) saturate(124%);
+      -webkit-backdrop-filter:blur(26px) saturate(124%);
+    }
+    [data-frost-group]{isolation:isolate}
+    .focus{
+      transition:transform .32s cubic-bezier(.2,.8,.2,1),filter .32s ease,opacity .32s ease,border-color .32s ease,background .32s ease,box-shadow .32s ease;
+    }
+    .focus:hover{
+      transform:translateY(-7px) scale(1.014);
+      border-color:rgba(255,255,255,.18);
+      background:linear-gradient(180deg,rgba(255,255,255,.11),rgba(255,255,255,.05));
+      box-shadow:0 36px 110px rgba(0,0,0,.52);
+      z-index:4;
+    }
+    [data-frost-group]:has(.focus:hover) .focus:not(:hover){
+      filter:blur(10px) saturate(.82);
+      opacity:.44;
+      transform:scale(.988);
+    }
+    .nav{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:14px;
+      margin-bottom:18px;
+      padding:12px 14px;
+      border-radius:999px;
+    }
+    .brand{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      color:rgba(244,238,232,.82);
+      font-size:12px;
+      letter-spacing:.15em;
+      text-transform:uppercase;
+    }
+    .brand-dot{
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      background:linear-gradient(180deg,var(--mint),#39786f);
+      box-shadow:0 0 18px rgba(116,211,195,.28);
+    }
+    .nav-links{display:flex;flex-wrap:wrap;gap:6px}
+    .nav-links a{
+      color:rgba(244,238,232,.74);
+      text-decoration:none;
+      font-size:13px;
+      padding:8px 12px;
+      border-radius:999px;
+    }
+    .nav-links a:hover{
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+    }
+    .hero{
+      min-height:92svh;
+      padding:28px;
+      border-radius:40px;
+      position:relative;
+      overflow:hidden;
+      background:
+        radial-gradient(circle at 82% 18%,rgba(210,170,104,.12),transparent 22%),
+        radial-gradient(circle at 16% 16%,rgba(116,211,195,.10),transparent 18%),
+        linear-gradient(140deg,rgba(8,8,9,.98),rgba(17,14,18,.96) 56%,rgba(24,17,20,.94));
+    }
+    .hero-grid{
+      display:grid;
+      grid-template-columns:minmax(0,1.08fr) 360px;
+      gap:20px;
+      align-items:end;
+    }
+    .eyebrow{
+      margin:0 0 16px;
+      color:rgba(244,238,232,.58);
+      font-size:12px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+    }
+    h1,h2,h3{
+      margin:0;
+      font-family:Georgia,"Times New Roman",serif;
+      font-weight:700;
+      letter-spacing:-.03em;
+    }
+    h1{
+      max-width:840px;
+      font-size:clamp(46px,7vw,84px);
+      line-height:.92;
+    }
+    h2{
+      font-size:clamp(30px,4.2vw,54px);
+      line-height:.97;
+    }
+    h3{
+      font-size:24px;
+      line-height:1.08;
+    }
+    .lead{
+      max-width:700px;
+      margin:18px 0 0;
+      color:rgba(244,238,232,.80);
+      font-size:18px;
+      line-height:1.8;
+    }
+    .actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      margin-top:26px;
+    }
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:48px;
+      padding:0 18px;
+      border-radius:999px;
+      text-decoration:none;
+      font-size:14px;
+      font-weight:700;
+      transition:transform .18s ease;
+    }
+    .btn:hover{transform:translateY(-2px)}
+    .btn.primary{
+      color:#1e1510;
+      background:linear-gradient(180deg,#ebdfcc,#c6a569);
+    }
+    .btn.secondary{
+      color:var(--text);
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.12);
+    }
+    .hero-side{
+      padding:22px;
+      border-radius:26px;
+      display:grid;
+      gap:12px;
+    }
+    .hero-side p{
+      margin:0;
+      color:var(--muted);
+      font-size:15px;
+      line-height:1.72;
+    }
+    .hero-chips{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:22px;
+    }
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 12px;
+      border-radius:999px;
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.08);
+      color:rgba(244,238,232,.76);
+      font-size:13px;
+    }
+    .scene{
+      margin-top:26px;
+      min-height:360px;
+      border-radius:30px;
+      padding:24px;
+      position:relative;
+      overflow:hidden;
+      background:
+        linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.015)),
+        radial-gradient(circle at 78% 24%,rgba(116,211,195,.08),transparent 20%);
+    }
+    .scene::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        linear-gradient(transparent 92%,rgba(255,255,255,.03) 92%),
+        linear-gradient(90deg,transparent 92%,rgba(255,255,255,.03) 92%);
+      background-size:100% 52px,140px 100%;
+      opacity:.18;
+    }
+    .scene-copy{
+      position:relative;
+      z-index:2;
+      max-width:420px;
+    }
+    .scene-copy h3{
+      font-size:44px;
+      margin-bottom:12px;
+    }
+    .scene-copy p{
+      margin:0;
+      color:var(--muted);
+      font-size:16px;
+      line-height:1.72;
+    }
+    .scene-svg{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      z-index:1;
+    }
+    .nodes{
+      position:absolute;
+      inset:0;
+      z-index:2;
+    }
+    .node{
+      position:absolute;
+      min-width:160px;
+      padding:16px 20px;
+      border-radius:18px;
+      background:linear-gradient(180deg,rgba(255,255,255,.09),rgba(255,255,255,.035));
+      border:1px solid rgba(255,255,255,.12);
+      box-shadow:0 18px 38px rgba(0,0,0,.24);
+      backdrop-filter:blur(22px);
+      -webkit-backdrop-filter:blur(22px);
+      font-size:15px;
+      color:rgba(244,238,232,.94);
+    }
+    .node strong{
+      display:block;
+      margin-bottom:2px;
+      font-size:18px;
+    }
+    .node small{
+      display:block;
+      color:rgba(244,238,232,.58);
+      font-size:12px;
+      line-height:1.5;
+    }
+    .n1{left:7%;bottom:20%}
+    .n2{left:29%;bottom:49%}
+    .n3{left:49%;bottom:20%}
+    .n4{left:69%;bottom:49%}
+    .n5{left:74%;bottom:8%}
+    .section{
+      margin-top:24px;
+      padding:30px;
+      border-radius:34px;
+    }
+    .section-head{
+      display:grid;
+      grid-template-columns:1.05fr .95fr;
+      gap:24px;
+      align-items:end;
+      margin-bottom:22px;
+    }
+    .kicker{
+      margin:0 0 8px;
+      color:rgba(210,170,104,.94);
+      font-size:12px;
+      font-weight:700;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+    }
+    .intro{
+      margin:0;
+      color:var(--muted);
+      font-size:16px;
+      line-height:1.8;
+      max-width:660px;
+    }
+    .grid-2,.grid-3,.grid-4,.lane-grid,.gate-grid,.skill-grid{
+      display:grid;
+      gap:14px;
+    }
+    .grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .grid-4{grid-template-columns:repeat(4,minmax(0,1fr))}
+    .lane-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+    .gate-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+    .skill-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .card,.lane,.gate,.skill-card,.final-card{
+      padding:22px;
+      border-radius:24px;
+      overflow:hidden;
+    }
+    .card p,.lane p,.gate p,.skill-card p,.final-card p{
+      margin:0;
+      color:var(--muted);
+      font-size:15px;
+      line-height:1.76;
+    }
+    .pill{
+      display:inline-flex;
+      margin-bottom:10px;
+      padding:6px 10px;
+      border-radius:999px;
+      background:rgba(255,255,255,.08);
+      color:rgba(244,238,232,.74);
+      font-size:11px;
+      font-weight:700;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+    .lane-head{
+      margin-bottom:14px;
+      padding-bottom:12px;
+      border-bottom:1px solid rgba(255,255,255,.08);
+    }
+    .lane-head strong{
+      display:block;
+      margin-bottom:6px;
+      color:rgba(244,238,232,.88);
+      font-size:14px;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+    .step{
+      margin-top:12px;
+      padding:16px 16px 14px;
+      border-radius:18px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+    }
+    .step:first-of-type{margin-top:0}
+    .step strong{
+      display:block;
+      margin-bottom:8px;
+      color:rgba(244,238,232,.94);
+      font-size:17px;
+    }
+    .meta{
+      display:grid;
+      gap:8px;
+      margin-top:10px;
+    }
+    .meta span{
+      display:block;
+      padding:9px 11px;
+      border-radius:14px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.06);
+      color:rgba(244,238,232,.72);
+      font-size:12px;
+      line-height:1.55;
+    }
+    .base{border-color:rgba(127,147,111,.28)}
+    .collect{border-color:rgba(210,170,104,.22)}
+    .strategy{border-color:rgba(110,80,97,.28)}
+    .return{border-color:rgba(207,99,71,.28)}
+    .gate-card{border-color:rgba(255,255,255,.14)}
+    .gate h3,.skill-card h3,.card h3,.final-card h3{margin-bottom:10px}
+    .gate small{
+      display:block;
+      margin-top:10px;
+      color:rgba(244,238,232,.58);
+      font-size:12px;
+      line-height:1.6;
+    }
+    .final{
+      display:grid;
+      grid-template-columns:1.05fr .95fr;
+      gap:24px;
+      padding:28px;
+      border-radius:32px;
+      background:
+        radial-gradient(circle at 82% 20%,rgba(210,170,104,.12),transparent 24%),
+        linear-gradient(135deg,rgba(9,9,10,.96),rgba(28,18,21,.94));
+    }
+    .final ul{
+      margin:14px 0 0;
+      padding-left:18px;
+      color:rgba(244,238,232,.78);
+      font-size:15px;
+      line-height:1.76;
+    }
+    .reveal{
+      opacity:0;
+      transform:translateY(18px);
+      transition:opacity .6s ease,transform .6s ease;
+    }
+    .reveal.visible{
+      opacity:1;
+      transform:translateY(0);
+    }
+    @media (max-width:1200px){
+      .hero-grid,
+      .section-head,
+      .lane-grid,
+      .gate-grid,
+      .grid-4,
+      .skill-grid,
+      .final{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+      .hero-grid,
+      .section-head,
+      .final{
+        grid-template-columns:1fr;
+      }
+    }
+    @media (max-width:760px){
+      .page{padding:12px 10px 54px}
+      .hero,.section{padding:22px;border-radius:24px}
+      .nav{
+        border-radius:24px;
+        flex-direction:column;
+        align-items:flex-start;
+      }
+      .lane-grid,
+      .gate-grid,
+      .grid-4,
+      .grid-3,
+      .grid-2,
+      .skill-grid,
+      .final{
+        grid-template-columns:1fr;
+      }
+      .scene{min-height:560px}
+      .scene-copy{max-width:none}
+      .scene-copy h3{font-size:36px}
+      .n1{left:8%;bottom:30%}
+      .n2{left:34%;bottom:56%}
+      .n3{left:47%;bottom:18%}
+      .n4{left:60%;bottom:42%}
+      .n5{left:60%;bottom:6%}
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <nav class="nav glass reveal" aria-label="Navegacao principal">
+      <div class="brand"><span class="brand-dot"></span>Landing Page Ops Noir V5</div>
+      <div class="nav-links">
+        <a href="#visao">Visao</a>
+        <a href="#drawflow">Drawflow</a>
+        <a href="#subgates">Subgates</a>
+        <a href="#skills">Skills</a>
+      </div>
+    </nav>
+
+    <section class="hero glass focus reveal" id="topo">
+      <div class="hero-grid" data-frost-group>
+        <div>
+          <p class="eyebrow">flow redesenhado com visibilidade operacional</p>
+          <h1>Agora o fluxo mostra onde cada skill entra e qual entregavel ela realmente preenche.</h1>
+          <p class="lead">A V5 reorganiza o sistema ao redor dos subgates. Em vez de mostrar apenas o caminho macro, ela deixa explicito o que precisa existir em cada ponto de decisao: skill responsavel, entregavel visivel e criterio para seguir.</p>
+          <div class="hero-chips">
+            <span class="chip">Mais visibilidade de artefatos</span>
+            <span class="chip">Mais clareza nos retornos</span>
+            <span class="chip">Menos gate abstrato</span>
+          </div>
+          <div class="actions">
+            <a class="btn primary" href="#subgates">Ver os subgates</a>
+            <a class="btn secondary" href="#drawflow">Ver o drawflow</a>
+          </div>
+        </div>
+        <aside class="hero-side glass focus">
+          <p>O macro continua igual em intencao: contexto antes de estrategia, estrategia antes de prompt, prompt antes de producao.</p>
+          <p>A mudanca esta no nivel de leitura: cada decisao agora aponta o artefato que precisa aparecer para o time saber se esta pronto ou nao.</p>
+          <p>Isso ajuda operacao, design e QA a enxergarem o estado do projeto sem depender de explicacao oral.</p>
+        </aside>
+      </div>
+
+      <div class="scene glass focus" data-frost-group>
+        <div class="scene-copy">
+          <h3>Flow vivo, mas com criterio de passagem.</h3>
+          <p>O sistema nao pergunta apenas "pode seguir?". Ele pergunta "qual skill alimenta este gate?" e "qual documento prova que este gate esta pronto?".</p>
+        </div>
+        <svg class="scene-svg" viewBox="0 0 1100 420" aria-hidden="true">
+          <defs>
+            <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+              <feGaussianBlur stdDeviation="8" result="blur"></feGaussianBlur>
+              <feMerge>
+                <feMergeNode in="blur"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+              </feMerge>
+            </filter>
+          </defs>
+          <path d="M160 292 C260 292 254 170 394 170" stroke="rgba(127,147,111,.95)" stroke-width="4" fill="none" filter="url(#glow)"></path>
+          <path d="M160 292 C270 292 256 360 394 360" stroke="rgba(210,170,104,.86)" stroke-width="4" fill="none" filter="url(#glow)"></path>
+          <path d="M560 170 C692 170 692 122 850 122" stroke="rgba(116,211,195,.95)" stroke-width="4" fill="none" filter="url(#glow)"></path>
+          <path d="M560 360 C706 360 700 226 850 226" stroke="rgba(210,170,104,.86)" stroke-width="4" fill="none" filter="url(#glow)"></path>
+          <path d="M980 122 C1062 122 1062 292 902 292" stroke="rgba(207,99,71,.88)" stroke-width="4" fill="none" filter="url(#glow)"></path>
+          <path d="M850 226 L850 306 C850 344 890 352 930 352" stroke="rgba(116,211,195,.92)" stroke-width="4" fill="none" filter="url(#glow)"></path>
+        </svg>
+        <div class="nodes" data-frost-group>
+          <div class="node focus n1"><strong>Base</strong><small>intake e pagina atual</small></div>
+          <div class="node focus n2"><strong>Subgates</strong><small>artefato visivel por etapa</small></div>
+          <div class="node focus n3"><strong>Direcao</strong><small>brief e prompt</small></div>
+          <div class="node focus n4"><strong>Producao</strong><small>pagina e QA</small></div>
+          <div class="node focus n5"><strong>Handoff</strong><small>decisao final e pacote</small></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section glass reveal" id="visao">
+      <div class="section-head">
+        <div>
+          <p class="kicker">Leitura da V5</p>
+          <h2>O fluxo agora explica evidencias, nao apenas etapas.</h2>
+        </div>
+        <p class="intro">Quando um gate falha, a equipe precisa saber qual material esta faltando. Quando ele passa, a equipe precisa saber qual artefato ficou pronto. Essa versao foi redesenhada exatamente para isso.</p>
+      </div>
+      <div class="grid-3" data-frost-group>
+        <article class="card glass focus base">
+          <span class="pill">1. Camada</span>
+          <h3>Base operacional</h3>
+          <p>O projeto nasce com intake, captura da pagina atual e benchmark. Sem esse conjunto, nenhum gate de contexto faz sentido.</p>
+        </article>
+        <article class="card glass focus strategy">
+          <span class="pill">2. Camada</span>
+          <h3>Direcao verificavel</h3>
+          <p>O brief e o prompt deixam de ser passos invisiveis. Eles viram entregaveis nomeados que destravam o proximo movimento.</p>
+        </article>
+        <article class="card glass focus return">
+          <span class="pill">3. Camada</span>
+          <h3>Retorno honesto</h3>
+          <p>O retorno nao vai para um lugar generico. Ele volta para a skill certa quando o gate mostra onde o pacote falhou.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section glass reveal" id="drawflow">
+      <div class="section-head">
+        <div>
+          <p class="kicker">Drawflow redesenhado</p>
+          <h2>Quatro trilhas, oito subgates e um entregavel claro por decisao.</h2>
+        </div>
+        <p class="intro">A leitura principal agora e Base, Benchmark, Direcao e Entrega. Dentro de cada trilha, os subgates mostram o que precisa aparecer para o time poder seguir com seguranca.</p>
+      </div>
+
+      <div class="lane-grid" data-frost-group>
+        <article class="lane glass focus base">
+          <div class="lane-head">
+            <strong>Trilha 1</strong>
+            <h3>Base do projeto</h3>
+            <p>Onde o projeto deixa de ser intuicao e vira escopo operacional.</p>
+          </div>
+          <div class="step">
+            <strong>1. Intake do projeto</strong>
+            <p>Objetivo, publico, oferta, CTA, prazo e stack.</p>
+            <div class="meta">
+              <span><strong>Skill:</strong> landing-page-orchestrator</span>
+              <span><strong>Entregavel:</strong> intake-brief.md preenchido</span>
+            </div>
+          </div>
+          <div class="step gate-card">
+            <strong>SG1. Intake completo?</strong>
+            <p>Se faltar informacao critica, o processo ainda nao entra em coleta.</p>
+          </div>
+          <div class="step">
+            <strong>2. Pagina atual</strong>
+            <p>Captura URL, PDF, screenshots, HTML/codigo e notas do estado atual.</p>
+            <div class="meta">
+              <span><strong>Skill:</strong> collect-current-page-context</span>
+              <span><strong>Entregavel:</strong> pacote da pagina atual</span>
+            </div>
+          </div>
+          <div class="step gate-card">
+            <strong>SG2. Pagina atual capturada?</strong>
+            <p>Sem diagnostico visivel do estado atual, o benchmark entra cego.</p>
+          </div>
+        </article>
+
+        <article class="lane glass focus collect">
+          <div class="lane-head">
+            <strong>Trilha 2</strong>
+            <h3>Benchmark e contexto</h3>
+            <p>Onde a referencia entra como repertorio e o contexto vira pacote unico.</p>
+          </div>
+          <div class="step">
+            <strong>3. Benchmark e referencias</strong>
+            <p>Seleciona de 2 a 5 referencias por funcao estrategica.</p>
+            <div class="meta">
+              <span><strong>Skill:</strong> collect-reference-benchmarks</span>
+              <span><strong>Entregavel:</strong> reference-capture.md por referencia + shortlist final</span>
+            </div>
+          </div>
+          <div class="step gate-card">
+            <strong>SG3. Benchmark aprovado?</strong>
+            <p>O gate confirma criterio, foco e limite de copia para cada referencia.</p>
+          </div>
+          <div class="step">
+            <strong>4. Context pack</strong>
+            <p>Junta pagina atual, benchmark, assets, branding, restricoes e notas de negocio.</p>
+            <div class="meta">
+              <span><strong>Skill:</strong> package-context-assets</span>
+              <span><strong>Entregavel:</strong> pacote unico de contexto</span>
+            </div>
+          </div>
+          <div class="step gate-card">
+            <strong>SG4. Context pack suficiente?</strong>
+            <p>Se o pacote ainda nao sustenta briefing sem suposicoes perigosas, ele volta para coleta.</p>
+          </div>
+        </article>
+
+        <article class="lane glass focus strategy">
+          <div class="lane-head">
+            <strong>Trilha 3</strong>
+            <h3>Direcao do projeto</h3>
+            <p>Onde o material bruto vira tese, arquitetura e instrucao acionavel.</p>
+          </div>
+          <div class="step">
+            <strong>5. Briefing estrategico</strong>
+            <p>Define promessa, prova, objecoes, arquitetura e limites de referencia.</p>
+            <div class="meta">
+              <span><strong>Skill:</strong> build-project-brief</span>
+              <span><strong>Entregavel:</strong> project-strategy-brief.md preenchido</span>
+            </div>
+          </div>
+          <div class="step gate-card">
+            <strong>SG5. Brief aprovado?</strong>
+            <p>Se a tese ainda depende de "copiar a referencia", o projeto nao segue.</p>
+          </div>
+          <div class="step">
+            <strong>6. Prompt mestre</strong>
+            <p>Traduz a estrategia em um comando unico de execucao.</p>
+            <div class="meta">
+              <span><strong>Skill:</strong> create-master-page-prompt</span>
+              <span><strong>Entregavel:</strong> master-prompt-template.md preenchido</span>
+            </div>
+          </div>
+          <div class="step gate-card">
+            <strong>SG6. Prompt pronto?</strong>
+            <p>O gate cobra contexto, CTA, prova, restricoes e papel correto das referencias.</p>
+          </div>
+        </article>
+
+        <article class="lane glass focus return">
+          <div class="lane-head">
+            <strong>Trilha 4</strong>
+            <h3>Execucao e entrega</h3>
+            <p>Onde a direcao vira pagina e o QA decide se volta ou se libera.</p>
+          </div>
+          <div class="step">
+            <strong>7. Primeira versao</strong>
+            <p>Produz a landing page com base no brief e no prompt aprovados.</p>
+            <div class="meta">
+              <span><strong>Skill:</strong> execucao guiada pelo orchestrator</span>
+              <span><strong>Entregavel:</strong> primeira versao da landing page</span>
+            </div>
+          </div>
+          <div class="step">
+            <strong>8. QA e handoff</strong>
+            <p>Valida narrativa, CTA, prova, mobile e organiza a entrega final.</p>
+            <div class="meta">
+              <span><strong>Skill:</strong> qa-and-handoff</span>
+              <span><strong>Entregavel:</strong> qa-checklist.md + pacote final de handoff</span>
+            </div>
+          </div>
+          <div class="step gate-card">
+            <strong>SG7. QA interno aprovado?</strong>
+            <p>Se falhar, o retorno vai para brief, prompt ou execucao conforme a origem do problema.</p>
+          </div>
+          <div class="step gate-card">
+            <strong>SG8. Feedback muda estrategia?</strong>
+            <p>O stakeholder decide se a pagina volta para direcao ou segue para entrega final.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section glass reveal" id="subgates">
+      <div class="section-head">
+        <div>
+          <p class="kicker">Subgates com visibilidade</p>
+          <h2>Cada gate agora aponta skill, artefato e criterio de passagem.</h2>
+        </div>
+        <p class="intro">Esta e a camada que faltava para o processo ficar operacional de verdade. Nao basta saber em que etapa estamos. O time precisa saber o que deveria existir ali.</p>
+      </div>
+
+      <div class="gate-grid" data-frost-group>
+        <article class="gate glass focus gate-card">
+          <span class="pill">SG1</span>
+          <h3>Intake completo?</h3>
+          <p><strong>Skill:</strong> landing-page-orchestrator</p>
+          <p><strong>Entregavel:</strong> intake-brief.md preenchido</p>
+          <small>Liberar apenas quando objetivo, publico, oferta, CTA, prazo e stack estiverem definidos.</small>
+        </article>
+        <article class="gate glass focus gate-card">
+          <span class="pill">SG2</span>
+          <h3>Pagina atual capturada?</h3>
+          <p><strong>Skill:</strong> collect-current-page-context</p>
+          <p><strong>Entregavel:</strong> URL, PDF, screenshots, HTML/codigo e notas do estado atual</p>
+          <small>Liberar apenas quando a pagina atual puder ser entendida sem precisar abrir o site.</small>
+        </article>
+        <article class="gate glass focus gate-card">
+          <span class="pill">SG3</span>
+          <h3>Benchmark aprovado?</h3>
+          <p><strong>Skill:</strong> collect-reference-benchmarks</p>
+          <p><strong>Entregavel:</strong> reference-capture.md preenchido e shortlist final</p>
+          <small>Liberar apenas quando cada referencia tiver funcao clara e limite explicito do que nao copiar.</small>
+        </article>
+        <article class="gate glass focus gate-card">
+          <span class="pill">SG4</span>
+          <h3>Context pack suficiente?</h3>
+          <p><strong>Skill:</strong> package-context-assets</p>
+          <p><strong>Entregavel:</strong> pacote unico de contexto validado</p>
+          <small>Liberar apenas quando pagina atual, benchmark, assets, branding, restricoes e notas de negocio estiverem consolidados.</small>
+        </article>
+        <article class="gate glass focus gate-card">
+          <span class="pill">SG5</span>
+          <h3>Brief aprovado?</h3>
+          <p><strong>Skill:</strong> build-project-brief</p>
+          <p><strong>Entregavel:</strong> project-strategy-brief.md preenchido</p>
+          <small>Liberar apenas quando a tese da pagina existir sem dependencia de copiar a referencia.</small>
+        </article>
+        <article class="gate glass focus gate-card">
+          <span class="pill">SG6</span>
+          <h3>Prompt pronto?</h3>
+          <p><strong>Skill:</strong> create-master-page-prompt</p>
+          <p><strong>Entregavel:</strong> master-prompt-template.md preenchido</p>
+          <small>Liberar apenas quando a instrucao puder ser executada sem explicacao oral complementar.</small>
+        </article>
+        <article class="gate glass focus gate-card">
+          <span class="pill">SG7</span>
+          <h3>QA interno aprovado?</h3>
+          <p><strong>Skill:</strong> qa-and-handoff</p>
+          <p><strong>Entregavel:</strong> qa-checklist.md preenchido e feedback priorizado</p>
+          <small>Liberar apenas quando promessa, CTA, prova, hierarquia e mobile estiverem consistentes.</small>
+        </article>
+        <article class="gate glass focus gate-card">
+          <span class="pill">SG8</span>
+          <h3>Feedback muda estrategia?</h3>
+          <p><strong>Skill:</strong> landing-page-orchestrator + qa-and-handoff</p>
+          <p><strong>Entregavel:</strong> decisao registrada entre retorno estrategico ou handoff final</p>
+          <small>Liberar quando o time souber se o feedback pede reabrir direcao ou apenas refinar execucao.</small>
+        </article>
+      </div>
+    </section>
+
+    <section class="section glass reveal" id="skills">
+      <div class="section-head">
+        <div>
+          <p class="kicker">Leitura por skill</p>
+          <h2>Quem preenche o que dentro do sistema.</h2>
+        </div>
+        <p class="intro">Esta secao resume a funcao operacional de cada skill ja conectada aos artefatos mais importantes do fluxo.</p>
+      </div>
+
+      <div class="skill-grid" data-frost-group>
+        <article class="skill-card glass focus base">
+          <h3>Landing Page Orchestrator</h3>
+          <p>Orquestra a passagem entre etapas e controla gates de abertura e retorno. Ele sustenta SG1 e reaparece em SG8 quando o feedback do stakeholder precisa reabrir a estrategia.</p>
+        </article>
+        <article class="skill-card glass focus collect">
+          <h3>Collect Current Page Context</h3>
+          <p>Preenche o pacote da pagina atual e da visibilidade ao estado presente do projeto. Ele alimenta SG2 com material auditavel.</p>
+        </article>
+        <article class="skill-card glass focus collect">
+          <h3>Collect Reference Benchmarks</h3>
+          <p>Esta nova subskill agora aparece de forma central no flow. Ela preenche os captures de benchmark e torna SG3 um gate real, nao uma coleta abstrata.</p>
+        </article>
+        <article class="skill-card glass focus collect">
+          <h3>Package Context Assets</h3>
+          <p>Transforma insumos dispersos em um pacote unico. Sem ela, SG4 vira opiniao; com ela, o gate passa a ter prova objetiva.</p>
+        </article>
+        <article class="skill-card glass focus strategy">
+          <h3>Build Project Brief</h3>
+          <p>Preenche o brief estrategico e sustenta SG5. E a skill que separa repertorio de tese.</p>
+        </article>
+        <article class="skill-card glass focus strategy">
+          <h3>Create Master Page Prompt</h3>
+          <p>Preenche o prompt mestre que desbloqueia a execucao. SG6 agora deixa isso visivel como artefato formal do processo.</p>
+        </article>
+        <article class="skill-card glass focus return">
+          <h3>QA And Handoff</h3>
+          <p>Valida a pagina, prioriza feedback e organiza o handoff final. Ela alimenta SG7 e participa da decisao em SG8.</p>
+        </article>
+        <article class="skill-card glass focus">
+          <h3>Leitura operacional</h3>
+          <p>Se um subgate falhar, a pergunta certa passa a ser: qual skill deveria ter preenchido este entregavel e o que ainda nao apareceu?</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="final glass focus reveal">
+      <div>
+        <p class="kicker">Fechamento</p>
+        <h2>A V5 nao so redesenha o flow. Ela transforma gate em evidencia operacional.</h2>
+        <p>O ganho principal desta versao e dar visibilidade ao que cada skill produz dentro do processo. Isso reduz ambiguidade, melhora a leitura do estado do projeto e deixa o retorno mais inteligente.</p>
+      </div>
+      <div>
+        <ul>
+          <li>Subgates explicitam skill responsavel e entregavel esperado.</li>
+          <li>A nova subskill de benchmark virou parte visivel do fluxo.</li>
+          <li>Os retornos agora se apoiam em artefatos, nao em percepcao solta.</li>
+          <li>O drawflow ficou mais util para operacao e alinhamento do time.</li>
+        </ul>
+        <div class="actions" style="margin-top:18px">
+          <a class="btn primary" href="#topo">Voltar ao topo</a>
+          <a class="btn secondary" href="#subgates">Rever subgates</a>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) entry.target.classList.add("visible");
+      });
+    }, { threshold: 0.14 });
+
+    document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
+  </script>
+</body>
+</html>
